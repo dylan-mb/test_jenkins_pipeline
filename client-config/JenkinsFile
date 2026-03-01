@@ -35,14 +35,27 @@ pipeline {
 
         stage('Dump prod') {
             steps {
+                script {
+                    def loadEnvVars(file, keys) {
+                        def pattern = keys.join('|')
+                        def output = sh(
+                            returnStdout: true,
+                            script: "grep -E '^(${pattern})=' ${file}"
+                        ).trim()
+                    
+                        output.split('\\n').each {
+                            def (k, v) = it.split('=', 2)
+                            env[k] = v
+                        }
+                    }
             
-                env.PROD_DB_NAME =  sh 'cat $PROD_ENV_FILE | grep TARGET_SERVER | cut -d= -f2-'
-                echo $PROD_DB_NAME
+                loadEnvVars(env.PROD_ENV_FILE, ['TARGET_SERVER'])
             }
         }
 
         stage('Hello') {
             steps {
+                sh 'echo $TARGET_SERVER
                 sh 'echo $INTEG_ENV_FILE'
                 sh 'echo $REC_ENV_FILE'
                 sh 'echo $PROD_ENV_FILE'
