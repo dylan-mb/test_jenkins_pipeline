@@ -6,7 +6,8 @@ pipeline {
     }
 
     environment { 
-        PROD_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.prod"
+        PROD_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.prod
+        INTEG_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.integ
     }
 
     stages {
@@ -29,16 +30,20 @@ pipeline {
                         error "No mapping for ${params.CLIENT} / RECETTE"
                     }
         
-                    env.REC_ENV_FILE =
-                        "client-config/${params.CLIENT}/.env.${params.CLIENT}.${recetteEnv}"
+                    env.REC_ENV_FILE = "client-config/${params.CLIENT}/.env.${params.CLIENT}.${recetteEnv}"
                 }
             }
         }
 
+        stage('Dump prod') {
+            env.PROD_DB_NAME =  sh 'cat $PROD_ENV_FILE | grep TARGET_SERVER | cut -d= -f2-'
+            echo $PROD_DB_NAME
+        }
+
         stage('Hello') {
             steps {
+                sh 'echo $INTEG_ENV_FILE'
                 sh 'echo $REC_ENV_FILE'
-                sh 'printenv'
                 sh 'echo $PROD_ENV_FILE'
                 sh 'cat $PROD_ENV_FILE | grep TARGET_SERVER | cut -d= -f2-'
                 echo 'Hello World'
