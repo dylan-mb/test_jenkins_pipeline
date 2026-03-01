@@ -49,7 +49,8 @@ pipeline {
                         }
                     }
             
-                loadEnvVars(env.PROD_ENV_FILE, ['TARGET_SERVER'])
+                    loadEnvVars(env.PROD_ENV_FILE, ['TARGET_SERVER'])
+                }
             }
         }
 
