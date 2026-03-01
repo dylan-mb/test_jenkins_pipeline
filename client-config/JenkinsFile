@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Hello') {
             steps {
-                sh 'cat client-config/agglo/.env.agglo.prod'
+                sh 'cat client-config/agglo/.env.agglo.prod | grep TARGET_SERVER | cut -d= -f2-'
                 echo 'Hello World'
             }
         }
