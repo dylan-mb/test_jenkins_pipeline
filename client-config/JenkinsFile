@@ -1,9 +1,18 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(name: 'CLIENT', choices: ['agglo', 'rna'], description: 'Client to test')
+    }
+
+    environment { 
+        PROD_ENV_FILE=client-config/${CLIENT}.env.${CLIENT}.prod
+    }
+
     stages {
         stage('Hello') {
             steps {
+                sh 'echo $PROD_ENV_FILE'
                 sh 'cat client-config/agglo/.env.agglo.prod | grep TARGET_SERVER | cut -d= -f2-'
                 echo 'Hello World'
             }
