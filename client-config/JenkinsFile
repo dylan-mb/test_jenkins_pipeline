@@ -14,23 +14,23 @@ pipeline {
             steps {
                 script {
                     def envMap = [
-                        rna:   [ STAGING: 'rec', INTEG: 'integ' ],
-                        bre:   [ STAGING: 'rec', INTEG: 'integ' ],
-                        agglo: [ STAGING: 'staging', INTEG: 'integ' ]
+                        rna:   [ RECETTE: 'rec', INTEG: 'integ' ],
+                        bre:   [ RECETTE: 'rec', INTEG: 'integ' ],
+                        agglo: [ RECETTE: 'staging', INTEG: 'integ' ]
                     ]
         
                     if (!envMap.containsKey(params.CLIENT)) {
                         error "Unknown client: ${params.CLIENT}"
                     }
         
-                    def physicalEnv = envMap[params.CLIENT][params.TARGET_ENV]
+                    def recetteEnv = envMap[params.CLIENT][RECETTE]
         
-                    if (!physicalEnv) {
-                        error "No mapping for ${params.CLIENT} / ${params.TARGET_ENV}"
+                    if (!recetteEnv) {
+                        error "No mapping for ${params.CLIENT} / recetteEnv"
                     }
         
                     env.REC_ENV_FILE =
-                        "client-config/${params.CLIENT}/.env.${params.CLIENT}.${physicalEnv}"
+                        "client-config/${params.CLIENT}/.env.${params.CLIENT}.${recetteEnv}"
                 }
             }
         }
