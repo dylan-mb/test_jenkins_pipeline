@@ -10,8 +10,34 @@ pipeline {
     }
 
     stages {
+        stage('Resolve environment file') {
+            steps {
+                script {
+                    def envMap = [
+                        RNA:   [ STAGING: 'rec', INTEG: 'integ' ],
+                        BRE:   [ STAGING: 'rec', INTEG: 'integ' ],
+                        AGGLO: [ STAGING: 'staging', INTEG: 'integ' ]
+                    ]
+        
+                    if (!envMap.containsKey(params.CLIENT)) {
+                        error "Unknown client: ${params.CLIENT}"
+                    }
+        
+                    def physicalEnv = envMap[params.CLIENT][params.TARGET_ENV]
+        
+                    if (!physicalEnv) {
+                        error "No mapping for ${params.CLIENT} / ${params.TARGET_ENV}"
+                    }
+        
+                    env.REC_ENV_FILE =
+                        "client-config/${params.CLIENT}/.env.${params.CLIENT}.${physicalEnv}"
+                }
+            }
+        }
+
         stage('Hello') {
             steps {
+                sh 'echo $REC_ENV_FILE'
                 sh 'printenv'
                 sh 'echo $PROD_ENV_FILE'
                 sh 'cat $PROD_ENV_FILE | grep TARGET_SERVER | cut -d= -f2-'
