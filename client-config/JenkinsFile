@@ -6,12 +6,17 @@ pipeline {
     }
 
     environment { 
-        PROD_ENV_FILE=client-config/${CLIENT}.env.${CLIENT}.prod
+        PROD_ENV_FILE= """${sh(returnStdout: true, script: 'echo "client-config/${CLIENT}.env.${CLIENT}.prod"')}"""
     }
 
     stages {
+        stage('Build') {
+            PROD_ENV_FILE=client-config/${CLIENT}.env.${CLIENT}.prod
+        }
+
         stage('Hello') {
             steps {
+                sh 'printenv'
                 sh 'echo $PROD_ENV_FILE'
                 sh 'cat client-config/agglo/.env.agglo.prod | grep TARGET_SERVER | cut -d= -f2-'
                 echo 'Hello World'
