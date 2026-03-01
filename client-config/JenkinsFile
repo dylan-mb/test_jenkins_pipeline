@@ -5,19 +5,14 @@ pipeline {
         choice(name: 'CLIENT', choices: ['agglo', 'rna'], description: 'Client to test')
     }
 
-    environment { 
-        PROD_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.prod"
-        INTEG_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.integ"
-    }
-
     stages {
         stage('Resolve environment file') {
             steps {
                 script {
                     def envMap = [
-                        rna:   [ RECETTE: 'rec', INTEG: 'integ' ],
-                        bre:   [ RECETTE: 'rec', INTEG: 'integ' ],
-                        agglo: [ RECETTE: 'staging', INTEG: 'integ' ]
+                        rna:   [ 'RECETTE': 'rec', 'INTEG': 'integ' ],
+                        bre:   [ 'RECETTE': 'rec', 'INTEG': 'integ' ],
+                        agglo: [ 'RECETTE': 'staging', 'INTEG': 'integ' ]
                     ]
         
                     if (!envMap.containsKey(params.CLIENT)) {
@@ -29,15 +24,21 @@ pipeline {
                     if (!recetteEnv) {
                         error "No mapping for ${params.CLIENT} / RECETTE"
                     }
-        
+
+
+                    env.PROD_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.prod"
                     env.REC_ENV_FILE = "client-config/${params.CLIENT}/.env.${params.CLIENT}.${recetteEnv}"
+                    env.INTEG_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.integ"
                 }
             }
         }
 
         stage('Dump prod') {
-            env.PROD_DB_NAME =  sh 'cat $PROD_ENV_FILE | grep TARGET_SERVER | cut -d= -f2-'
-            echo $PROD_DB_NAME
+            steps {
+            
+                env.PROD_DB_NAME =  sh 'cat $PROD_ENV_FILE | grep TARGET_SERVER | cut -d= -f2-'
+                echo $PROD_DB_NAME
+            }
         }
 
         stage('Hello') {
