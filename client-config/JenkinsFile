@@ -23,10 +23,10 @@ pipeline {
                         error "Unknown client: ${params.CLIENT}"
                     }
         
-                    def recetteEnv = envMap[params.CLIENT][RECETTE]
+                    def recetteEnv = envMap[params.CLIENT]['RECETTE']
         
                     if (!recetteEnv) {
-                        error "No mapping for ${params.CLIENT} / recetteEnv"
+                        error "No mapping for ${params.CLIENT} / RECETTE"
                     }
         
                     env.REC_ENV_FILE =
