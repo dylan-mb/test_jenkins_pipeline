@@ -6,8 +6,8 @@ pipeline {
     }
 
     environment { 
-        PROD_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.prod
-        INTEG_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.integ
+        PROD_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.prod"
+        INTEG_ENV_FILE = "client-config/${CLIENT}/.env.${CLIENT}.integ"
     }
 
     stages {
