@@ -14,9 +14,9 @@ pipeline {
             steps {
                 script {
                     def envMap = [
-                        RNA:   [ STAGING: 'rec', INTEG: 'integ' ],
-                        BRE:   [ STAGING: 'rec', INTEG: 'integ' ],
-                        AGGLO: [ STAGING: 'staging', INTEG: 'integ' ]
+                        rna:   [ STAGING: 'rec', INTEG: 'integ' ],
+                        bre:   [ STAGING: 'rec', INTEG: 'integ' ],
+                        agglo: [ STAGING: 'staging', INTEG: 'integ' ]
                     ]
         
                     if (!envMap.containsKey(params.CLIENT)) {
