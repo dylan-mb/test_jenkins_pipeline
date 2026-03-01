@@ -55,7 +55,7 @@ pipeline {
 
         stage('Hello') {
             steps {
-                sh 'echo $TARGET_SERVER
+                sh 'echo $TARGET_SERVER'
                 sh 'echo $INTEG_ENV_FILE'
                 sh 'echo $REC_ENV_FILE'
                 sh 'echo $PROD_ENV_FILE'
