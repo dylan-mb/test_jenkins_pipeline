@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Hello') {
             steps {
+                sh 'cat /client-config/rna/.env.rna.prod'
                 echo 'Hello World'
             }
         }
